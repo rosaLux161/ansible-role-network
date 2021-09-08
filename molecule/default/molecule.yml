@@ -1,0 +1,37 @@
+---
+scenario:
+  name: default
+
+dependency:
+  enabled: no
+
+driver:
+  name: docker
+
+# ansible-lint buggy right now
+# ansible-lint -c .ansible-lint
+lint: |
+  set -e
+  yamllint -c .yamllint .
+
+platforms:
+  - name: debian-buster-systemd
+    image: "geerlingguy/docker-debian11-ansible:latest"
+    pre_build_image: yes
+    pull: yes
+    privileged: yes
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+    log: yes
+
+provisioner:
+  name: ansible
+  log: yes
+  ansible_args:
+    - '-D'
+  options:
+    vvv: no
+  playbooks:
+    converge: converge.yml

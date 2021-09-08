@@ -1,0 +1,25 @@
+---
+- name: Fail if not Debian Bullseye
+  fail:
+    msg: Currently only Debian Bullseye is supported
+  when: not ansible_distribution == 'Debian' or not ansible_distribution_release == 'bullseye'
+
+- name: Fail if network_interface not set
+  fail:
+    msg: Please set network_interface, e.g. eth0
+  when: network_interface is not defined
+
+- name: Fail if network_dhcp is turned off and network data is not defined
+  fail:
+    msg: Please set network_ipv4_address, network_subnetmask and network_gateway
+  when: network_dhcp and network_ipv4_address is defined and network_subnetmask is defined and network_gateway is defined
+
+- name: Copy interfaces file
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    group: root
+    owner: root
+    mode: '0644'
+  notify:
+    - restart-networking

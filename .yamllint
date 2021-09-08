@@ -1,0 +1,14 @@
+---
+extends: default
+
+rules:
+  line-length: disable
+  truthy:
+    allowed-values:
+      - 'yes'
+      - 'no'
+    check-keys: yes
+
+ignore: |
+  venv/
+  .github/

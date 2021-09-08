@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+
+  pre_tasks:
+    - name: Install dependencies
+      apt:
+        name: ifupdown
+        state: present
+        update_cache: yes
+
+  vars:
+    network_interface: eth0
+
+  roles:
+    - role: ansible-role-network
